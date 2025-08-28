@@ -18,6 +18,9 @@ if (!globalThis.__otelInitialized) {
     diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
   }
 
+  console.log("--------------------------------");
+  console.log(process.env);
+  console.log("--------------------------------");
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'sveltekit-testing',
   });
