@@ -23,15 +23,15 @@ if (!globalThis.__otelInitialized) {
   console.log(process.env);
   console.log("--------------------------------");
 
-  console.log("----ATTEMPTING File Read----");
+  console.log("----ATTEMPTING Directory List----");
   let fs = require('fs');
   fs.readdirSync('./').forEach((file: string) => {
     console.log(file);
   });
-  console.log("----END File Read----");
+  console.log("----END Directory List----");
 
   console.log("----Attempt to read file----");
-  let file = readFileSync('./.env', 'utf8');
+  let file = readFileSync('./run.sh', 'utf8');
   console.log(file);
   console.log("----End file read----");
 
