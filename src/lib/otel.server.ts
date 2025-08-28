@@ -21,6 +21,14 @@ if (!globalThis.__otelInitialized) {
   console.log("--------------------------------");
   console.log(process.env);
   console.log("--------------------------------");
+
+  console.log("----ATTEMPTING File Read----");
+  let fs = require('fs');
+  fs.readdirSync('./').forEach((file: string) => {
+    console.log(file);
+  });
+  console.log("----END File Read----");
+
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'sveltekit-testing',
   });
