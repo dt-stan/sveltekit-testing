@@ -6,6 +6,7 @@ import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+import { readFileSync } from 'fs';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -28,6 +29,11 @@ if (!globalThis.__otelInitialized) {
     console.log(file);
   });
   console.log("----END File Read----");
+
+  console.log("----Attempt to read file----");
+  let file = readFileSync('./.env', 'utf8');
+  console.log(file);
+  console.log("----End file read----");
 
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'sveltekit-testing',
