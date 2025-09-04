@@ -44,10 +44,10 @@ if (!globalThis.__otelInitialized) {
   });
   console.log("----END Directory List----");
 
-  console.log("----Attempt to read file----");
-  let file = readFileSync('./run.sh', 'utf8');
-  console.log(file);
-  console.log("----End file read----");
+//   console.log("----Attempt to read file----");
+//   let file = readFileSync('./run.sh', 'utf8');
+//   console.log(file);
+//   console.log("----End file read----");
 
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing',
