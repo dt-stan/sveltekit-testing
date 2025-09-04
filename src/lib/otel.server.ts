@@ -6,7 +6,15 @@ import { UndiciInstrumentation } from '@opentelemetry/instrumentation-undici';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
+import {
+  OTEL_SERVICE_NAME,
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
+  OTEL_EXPORTER_OTLP_ENDPOINT,
+  OTLP_AUTH_HEADER,
+  OTEL_EXPORTER_OTLP_HEADERS,
+  OTEL_DIAGNOSTICS
+} from '$env/static/private';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -15,17 +23,23 @@ declare global {
 
 if (!globalThis.__otelInitialized) {
   // Optional: turn on internal OTel diagnostics when debugging
-  if (process.env.OTEL_DIAGNOSTICS === '1') {
+  if (OTEL_DIAGNOSTICS === '1') {
     diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
   }
 
   console.log("--------------------------------");
-  console.log(process.env);
+  console.log({
+    OTEL_SERVICE_NAME,
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
+    OTEL_EXPORTER_OTLP_ENDPOINT,
+    OTLP_AUTH_HEADER,
+    OTEL_EXPORTER_OTLP_HEADERS,
+    OTEL_DIAGNOSTICS
+  });
   console.log("--------------------------------");
 
   console.log("----ATTEMPTING Directory List----");
-  let fs = require('fs');
-  fs.readdirSync('./').forEach((file: string) => {
+  readdirSync('./').forEach((file: string) => {
     console.log(file);
   });
   console.log("----END Directory List----");
@@ -36,27 +50,27 @@ if (!globalThis.__otelInitialized) {
   console.log("----End file read----");
 
   const resource = resourceFromAttributes({
-    [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'sveltekit-testing',
+    [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing',
   });
 
-  if (!process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT) {
+  if (!OTEL_EXPORTER_OTLP_TRACES_ENDPOINT) {
     console.log("OTEL EXPORTER URL Not Found");
   }
 
-  if (!process.env.OTLP_AUTH_HEADER){
+  if (!OTLP_AUTH_HEADER){
     console.log("OTEL API Token Not Found");
   }
 
   const traceExporter = new OTLPTraceExporter({
     // e.g. https://your-otlp.example.com/v1/traces
-    url: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      ?? process.env.OTEL_EXPORTER_OTLP_ENDPOINT
+    url: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      ?? OTEL_EXPORTER_OTLP_ENDPOINT
       ?? undefined,
     headers: {
       // Example for backends that expect an API token in Authorization
       // (adjust header key/value to your backend’s requirement)
-      Authorization: process.env.OTLP_AUTH_HEADER
-        ?? process.env.OTEL_EXPORTER_OTLP_HEADERS /* supports "k=v,k2=v2" */
+      Authorization: OTLP_AUTH_HEADER
+        ?? OTEL_EXPORTER_OTLP_HEADERS /* supports "k=v,k2=v2" */
         ?? '',
     },
     // keep default concurrency/batching

@@ -1,3 +1,4 @@
+import { fetchProducts } from "$lib/server/product";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event) => {
@@ -5,13 +6,19 @@ export const load: PageServerLoad = async (event) => {
 
   console.log("This is our load function");
 
-  const response = await fetch(
+  const responseBody = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${articleId}`
-  );
-  const responseBody = await response.json();
+  ).then((res) => {
+    if (!res.ok) {
+      throw new Error("Failed to fetch blog article");
+    }
+    return res.json();
+  });
 
+  
   return {
     title: responseBody.title,
     blogArticle: responseBody.body,
+    relatedProducts: await fetchProducts(),
   };
 };
