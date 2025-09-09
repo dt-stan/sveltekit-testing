@@ -20,5 +20,9 @@
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
 		"vite": "^7.0.4"
+	},
+	"dependencies": {
+		"@opentelemetry/auto-instrumentations-node": "^0.63.0",
+		"@opentelemetry/sdk-node": "^0.204.0"
 	}
 }
