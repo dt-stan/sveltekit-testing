@@ -3,8 +3,8 @@ import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentation
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-import { createAddHookMessageChannel } from 'import-in-the-middle';
-import { register } from 'module';
+// import { createAddHookMessageChannel } from 'import-in-the-middle';
+// import { register } from 'module';
 
 // Francois Commit
 import {
@@ -16,8 +16,8 @@ import {
     OTEL_DIAGNOSTICS
 } from '$env/static/private';
 
-const { registerOptions } = createAddHookMessageChannel();
-register('import-in-the-middle/hook.mjs', import.meta.url, registerOptions);
+// const { registerOptions } = createAddHookMessageChannel();
+// register('import-in-the-middle/hook.mjs', import.meta.url, registerOptions);
 
 console.log("--------------------------------");
 console.log({
