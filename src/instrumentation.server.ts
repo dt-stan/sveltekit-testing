@@ -6,8 +6,8 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
 import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
-// import { createAddHookMessageChannel } from 'import-in-the-middle';
-// import { register } from 'module';
+import { createAddHookMessageChannel } from 'import-in-the-middle';
+import { register } from 'module';
 
 // import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 // diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
@@ -23,8 +23,8 @@ import {
     OTEL_DIAGNOSTICS
 } from '$env/static/private';
 
-// const { registerOptions } = createAddHookMessageChannel();
-// register('import-in-the-middle/hook.mjs', import.meta.url, registerOptions);
+const { registerOptions } = createAddHookMessageChannel();
+register('import-in-the-middle/hook.mjs', import.meta.url, registerOptions);
 
 console.log("--------------------------------");
 console.log({
