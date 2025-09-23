@@ -5,7 +5,6 @@ import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
 import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
@@ -42,18 +41,6 @@ const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing-intobs'
 });
 
-const traceExporter = new OTLPTraceExporter({
-        // e.g. https://your-otlp.example.com/v1/traces
-        url: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-             ?? OTEL_EXPORTER_OTLP_ENDPOINT
-             ?? undefined,
-        headers: {
-            Authorization: OTLP_AUTH_HEADER
-                           ?? OTEL_EXPORTER_OTLP_HEADERS
-                           ?? '',
-        }
-    })
-
 const logExporter = new OTLPLogExporter({
     url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
          ?? OTEL_EXPORTER_OTLP_ENDPOINT
@@ -65,19 +52,19 @@ const logExporter = new OTLPLogExporter({
     }
 });
 
-
-// Custom BatchSpanProcessor tuned for Lambda environments
-const spanProcessor = new BatchSpanProcessor(traceExporter, {
-    maxQueueSize: 256,
-    scheduledDelayMillis: 200,
-    exportTimeoutMillis: 5000,
-    maxExportBatchSize: 64
-});
-
-
 const sdk = new NodeSDK({
 	resource,
-	spanProcessor,
+	traceExporter: new OTLPTraceExporter({
+        // e.g. https://your-otlp.example.com/v1/traces
+        url: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+             ?? OTEL_EXPORTER_OTLP_ENDPOINT
+             ?? undefined,
+        headers: {
+            Authorization: OTLP_AUTH_HEADER
+                           ?? OTEL_EXPORTER_OTLP_HEADERS
+                           ?? '',
+        }
+    }),
     logRecordProcessor: new BatchLogRecordProcessor(logExporter),
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
 });
