@@ -1,11 +1,11 @@
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
-import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
+// import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
-import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
+// import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
+// import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
 import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
@@ -41,16 +41,16 @@ const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing-intobs'
 });
 
-const logExporter = new OTLPLogExporter({
-    url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-         ?? OTEL_EXPORTER_OTLP_ENDPOINT
-         ?? undefined,
-    headers: {
-        Authorization: OTLP_AUTH_HEADER
-                        ?? OTEL_EXPORTER_OTLP_HEADERS
-                        ?? '',
-    }
-});
+// const logExporter = new OTLPLogExporter({
+//     url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+//          ?? OTEL_EXPORTER_OTLP_ENDPOINT
+//          ?? undefined,
+//     headers: {
+//         Authorization: OTLP_AUTH_HEADER
+//                         ?? OTEL_EXPORTER_OTLP_HEADERS
+//                         ?? '',
+//     }
+// });
 
 const sdk = new NodeSDK({
 	resource,
@@ -66,8 +66,9 @@ const sdk = new NodeSDK({
         },
         timeoutMillis: 1000
     }),
-    logRecordProcessor: new BatchLogRecordProcessor(logExporter),
-	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
+    // logRecordProcessor: new BatchLogRecordProcessor(logExporter),
+	// instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
+	instrumentations: [ getNodeAutoInstrumentations() ]
 });
 
 try{
