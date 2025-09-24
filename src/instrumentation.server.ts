@@ -75,3 +75,10 @@ try{
 } catch (e) {
     console.error("OTEL init failed:", e);
 }
+
+process.on('SIGTERM', () => {
+  sdk.shutdown()
+    .then(() => console.log('OpenTelemetry SDK terminated'))
+    .catch((error) => console.error('Error terminating OpenTelemetry SDK', error))
+    .finally(() => process.exit(0));
+});
