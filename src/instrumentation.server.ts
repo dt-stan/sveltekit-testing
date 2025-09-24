@@ -10,7 +10,7 @@ import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.VERBOSE);
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
 
 // Francois Commit
 import {
@@ -63,7 +63,8 @@ const sdk = new NodeSDK({
             Authorization: OTLP_AUTH_HEADER
                            ?? OTEL_EXPORTER_OTLP_HEADERS
                            ?? '',
-        }
+        },
+        timeoutMillis: 1000
     }),
     logRecordProcessor: new BatchLogRecordProcessor(logExporter),
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
