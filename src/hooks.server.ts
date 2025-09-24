@@ -15,6 +15,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         kind: SpanKind.INTERNAL
     });
     createdNewSpan = true;
+    console.log("Creating a new span to associate user cookie with.");
   }
 
 
