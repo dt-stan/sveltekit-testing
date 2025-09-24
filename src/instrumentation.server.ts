@@ -63,8 +63,8 @@ const sdk = new NodeSDK({
             Authorization: OTLP_AUTH_HEADER
                            ?? OTEL_EXPORTER_OTLP_HEADERS
                            ?? '',
-        },
-        timeoutMillis: 1000
+        }
+        // timeoutMillis: 1000
     }),
     // logRecordProcessor: new BatchLogRecordProcessor(logExporter),
 	// instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
