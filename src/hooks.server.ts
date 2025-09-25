@@ -24,7 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (userID){
       console.log(`Setting DT User ID - '${userID}'`);
-      span.setAttribute("user-id", userID);
+      // span.setAttribute("user-id", userID);
     }
   }
 
