@@ -11,7 +11,7 @@ import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 
 // Francois Commit
 import {
