@@ -24,7 +24,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 
   try {
-    span.setAttribute('test', "foobar");
     // Access the Dynatrace dtCookie to extract a session attribute
     const rawCookie = event.cookies.get("dtCookie") ?? "";
 
