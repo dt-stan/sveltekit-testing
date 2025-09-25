@@ -69,10 +69,12 @@ const logExporter = new OTLPLogExporter({
     timeoutMillis: 10
 });
 
+export const batchLogProcessor = new BatchLogRecordProcessor(logExporter);
+
 const sdk = new NodeSDK({
 	resource,
     spanProcessor: batchSpanProcessor,
-    logRecordProcessor: new BatchLogRecordProcessor(logExporter),
+    logRecordProcessor: batchLogProcessor,
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
 });
 

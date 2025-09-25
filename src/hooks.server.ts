@@ -1,7 +1,10 @@
 // src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit';
 import { context, trace, SpanKind } from '@opentelemetry/api';
-import { batchSpanProcessor } from './instrumentation.server';
+import { 
+  batchSpanProcessor,
+  batchLogProcessor
+} from './instrumentation.server';
 
 const tracer = trace.getTracer('sveltekit-hooks');
 
@@ -35,6 +38,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     // Proceed with the request
     const response = await resolve(event);
     await batchSpanProcessor.forceFlush();
+    await batchLogProcessor.forceFlush();
     return response;
   } catch (error) {
     span.recordException(error);
