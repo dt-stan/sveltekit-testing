@@ -25,14 +25,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   try {
     // Access the Dynatrace dtCookie to extract a session attribute
-    const rawCookie = event.cookies.get("dtCookie") ?? "";
+    // const rawCookie = event.cookies.get("dtCookie") ?? "";
 
-    const match = rawCookie.match(/_sn_([A-Z0-9]+)_/);
-    const sessionId: string = match?.[1] ?? "";
+    // const match = rawCookie.match(/_sn_([A-Z0-9]+)_/);
+    // const sessionId: string = match?.[1] ?? "";
 
-    console.log("Extracted session ID:", sessionId);
+    // console.log("Extracted session ID:", sessionId);
 
-    span.setAttribute("session_id", sessionId);
+    // span.setAttribute("session_id", sessionId);
+
+    const userID = event.cookies.get("rxVisitor") ?? "";
+    span.setAttribute("user-id", userID);
 
     // Proceed with the request
     const response = await resolve(event);
