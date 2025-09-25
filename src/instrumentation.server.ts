@@ -10,8 +10,8 @@ import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
-// import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.ALL);
 
 // Francois Commit
 import {
