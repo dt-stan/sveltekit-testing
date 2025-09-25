@@ -66,7 +66,7 @@ const logExporter = new OTLPLogExporter({
                         ?? OTEL_EXPORTER_OTLP_HEADERS
                         ?? '',
     },
-    timeoutMillis: 10
+    // timeoutMillis: 10
 });
 
 export const batchLogProcessor = new BatchLogRecordProcessor(logExporter);
