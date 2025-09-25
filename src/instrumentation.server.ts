@@ -50,8 +50,8 @@ const traceExporter = new OTLPTraceExporter({
             Authorization: OTLP_AUTH_HEADER
                            ?? OTEL_EXPORTER_OTLP_HEADERS
                            ?? '',
-        }
-        // timeoutMillis: 1000
+        },
+        timeoutMillis: 10
     });
 
 const logExporter = new OTLPLogExporter({
@@ -62,10 +62,11 @@ const logExporter = new OTLPLogExporter({
         Authorization: OTLP_AUTH_HEADER
                         ?? OTEL_EXPORTER_OTLP_HEADERS
                         ?? '',
-    }
+    },
+    timeoutMillis: 10
 });
 
-const sdk = new NodeSDK({
+export const sdk = new NodeSDK({
 	resource,
 	traceExporter: traceExporter,
     logRecordProcessor: new BatchLogRecordProcessor(logExporter),

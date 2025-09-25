@@ -1,11 +1,8 @@
 // src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit';
 import { context, trace, SpanKind } from '@opentelemetry/api';
-import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 
 const tracer = trace.getTracer('sveltekit-hooks');
-const provider = new NodeTracerProvider();
-provider.register();
 
 export const handle: Handle = async ({ event, resolve }) => {
   // Try to get the current active span
@@ -36,7 +33,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     // Proceed with the request
     const response = await resolve(event);
-    await provider.forceFlush();
   
     return response;
   } catch (error) {
