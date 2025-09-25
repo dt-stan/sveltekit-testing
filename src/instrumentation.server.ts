@@ -5,7 +5,8 @@ import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-proto';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
-import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
+import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs';
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
@@ -51,8 +52,10 @@ const traceExporter = new OTLPTraceExporter({
                            ?? OTEL_EXPORTER_OTLP_HEADERS
                            ?? '',
         },
-        timeoutMillis: 10
+        // timeoutMillis: 10
     });
+
+export const batchSpanProcessor = new BatchSpanProcessor(traceExporter);
 
 const logExporter = new OTLPLogExporter({
     url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
@@ -66,9 +69,9 @@ const logExporter = new OTLPLogExporter({
     timeoutMillis: 10
 });
 
-export const sdk = new NodeSDK({
+const sdk = new NodeSDK({
 	resource,
-	traceExporter: traceExporter,
+    spanProcessor: batchSpanProcessor,
     logRecordProcessor: new BatchLogRecordProcessor(logExporter),
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
 });
