@@ -6,7 +6,7 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ConsoleInstrumentation } from '@sovarto/opentelemetry-instrumentation-console';
 import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { createAddHookMessageChannel } from 'import-in-the-middle';
 import { register } from 'module';
 
@@ -38,23 +38,6 @@ OTEL_DIAGNOSTICS
 });
 console.log("--------------------------------");
 
-if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    try {
-        const ctx = (globalThis as any).__LAMBDA_CONTEXT__ as {
-            getRemainingTimeInMillis: () => number;
-        };
-
-        if (ctx && typeof ctx.getRemainingTimeInMillis === 'function') {
-            const remaining = ctx.getRemainingTimeInMillis();
-            console.log(`-------------> Lambda Remaining Time '${remaining}'`);
-        }
-    }
-    catch {
-        // No context available, skip
-        console.log("----> No context available.")
-    }
-}
-
 const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing-intobs'
 });
@@ -72,7 +55,7 @@ const traceExporter = new OTLPTraceExporter({
         // timeoutMillis: 10
     });
 
-export const batchSpanProcessor = new BatchSpanProcessor(traceExporter);
+export const simpleSpanProcessor = new SimpleSpanProcessor(traceExporter);
 
 const logExporter = new OTLPLogExporter({
     url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
@@ -90,7 +73,7 @@ export const batchLogProcessor = new BatchLogRecordProcessor(logExporter);
 
 const sdk = new NodeSDK({
 	resource,
-    spanProcessor: batchSpanProcessor,
+    spanProcessor: simpleSpanProcessor,
     logRecordProcessor: batchLogProcessor,
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
 });

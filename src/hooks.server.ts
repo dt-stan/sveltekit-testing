@@ -2,7 +2,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { context, trace, SpanKind } from '@opentelemetry/api';
 import { 
-  batchSpanProcessor,
+  simpleSpanProcessor,
   batchLogProcessor
 } from './instrumentation.server';
 
@@ -34,7 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   } finally {
     if (span) {
       console.log("Flushing Buffers");
-      await batchSpanProcessor.forceFlush();
+      await simpleSpanProcessor.forceFlush();
       await batchLogProcessor.forceFlush();
     }
   }
