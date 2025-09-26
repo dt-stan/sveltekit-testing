@@ -34,7 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   } finally {
     if (span) {
       console.log("Flushing Buffers");
-      await simpleSpanProcessor.forceFlush();
+      // await simpleSpanProcessor.forceFlush();
       await batchLogProcessor.forceFlush();
     }
   }
