@@ -38,6 +38,23 @@ OTEL_DIAGNOSTICS
 });
 console.log("--------------------------------");
 
+if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    try {
+        const ctx = (globalThis as any).__LAMBDA_CONTEXT__ as {
+            getRemainingTimeInMillis: () => number;
+        };
+
+        if (ctx && typeof ctx.getRemainingTimeInMillis === 'function') {
+            const remaining = ctx.getRemainingTimeInMillis();
+            console.log(`-------------> Lambda Remaining Time '${remaining}'`);
+        }
+    }
+    catch {
+        // No context available, skip
+        console.log("----> No context available.")
+    }
+}
+
 const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: OTEL_SERVICE_NAME ?? 'sveltekit-testing-intobs'
 });
