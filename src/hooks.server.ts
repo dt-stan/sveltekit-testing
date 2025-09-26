@@ -29,13 +29,13 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   // Proceed with the request
-  const response = await resolve(event);
-
-  if (span) {
-    console.log("Flushing Buffers");
-    await batchSpanProcessor.forceFlush();
-    await batchLogProcessor.forceFlush();
+  try {
+    return await resolve(event);
+  } finally {
+    if (span) {
+      console.log("Flushing Buffers");
+      await batchSpanProcessor.forceFlush();
+      await batchLogProcessor.forceFlush();
+    }
   }
-  
-  return response;
 }
