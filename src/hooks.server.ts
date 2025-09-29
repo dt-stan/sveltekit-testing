@@ -12,14 +12,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   
   if (span) {
     // Try to grab Dynatrace Cookies
-    const rawCookie = event.cookies.get("dtCookie") ?? "";
+    const dtCookie = event.cookies.get("dtCookie") ?? "";
 
-    const match = rawCookie.match(/_sn_([A-Z0-9]+)_/);
-    const sessionId: string = match?.[1] ?? "";
+    const browserSessionIdRegex = dtCookie.match(/_sn_([A-Z0-9]+)_/);
+    const browserSessionId: string = browserSessionIdRegex?.[1] ?? "";
 
-    if (sessionId){
-      console.log("Extracted session ID:", sessionId);
-      span.setAttribute("session_id", sessionId);
+    if (browserSessionId){
+      console.log("Extracted browser session ID:", browserSessionId);
+      span.setAttribute("browser_session_id", browserSessionId);
     }
 
     const userID = event.cookies.get("rxVisitor") ?? "";
@@ -27,6 +27,16 @@ export const handle: Handle = async ({ event, resolve }) => {
     if (userID){
       console.log(`Setting DT User ID - '${userID}'`);
       span.setAttribute("user_id", userID);
+    }
+
+    const dtPCCookie = event.cookies.get("dtPC") ?? "";
+
+    const sessionIdRegex = dtPCCookie.match(/h-v([^-]+-\d+)e0/);
+    const sessionId = sessionIdRegex ? sessionIdRegex[1] : null;
+
+    if (sessionId){
+      console.log("Setting DT RUM session ID:", sessionId);
+      span.setAttribute("session_id", sessionId);
     }
   }
 
