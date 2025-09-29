@@ -12,14 +12,16 @@ export const handle: Handle = async ({ event, resolve }) => {
   
   if (span) {
     // Try to grab Dynatrace Cookies
-    // const rawCookie = event.cookies.get("dtCookie") ?? "";
+    const rawCookie = event.cookies.get("dtCookie") ?? "";
 
-    // const match = rawCookie.match(/_sn_([A-Z0-9]+)_/);
-    // const sessionId: string = match?.[1] ?? "";
+    const match = rawCookie.match(/_sn_([A-Z0-9]+)_/);
+    const sessionId: string = match?.[1] ?? "";
 
-    // console.log("Extracted session ID:", sessionId);
+    if (sessionId){
+      console.log("Extracted session ID:", sessionId);
+      span.setAttribute("session-id", sessionId);
+    }
 
-    // span.setAttribute("session_id", sessionId);
     const userID = event.cookies.get("rxVisitor") ?? "";
 
     if (userID){
