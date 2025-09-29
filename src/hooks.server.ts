@@ -19,14 +19,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (sessionId){
       console.log("Extracted session ID:", sessionId);
-      span.setAttribute("session-id", sessionId);
+      span.setAttribute("session_id", sessionId);
     }
 
     const userID = event.cookies.get("rxVisitor") ?? "";
 
     if (userID){
       console.log(`Setting DT User ID - '${userID}'`);
-      span.setAttribute("user-id", userID);
+      span.setAttribute("user_id", userID);
     }
   }
 
