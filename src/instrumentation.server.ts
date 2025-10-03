@@ -57,24 +57,24 @@ const traceExporter = new OTLPTraceExporter({
 
 export const simpleSpanProcessor = new SimpleSpanProcessor(traceExporter);
 
-const logExporter = new OTLPLogExporter({
-    url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-         ?? OTEL_EXPORTER_OTLP_ENDPOINT
-         ?? undefined,
-    headers: {
-        Authorization: OTLP_AUTH_HEADER
-                        ?? OTEL_EXPORTER_OTLP_HEADERS
-                        ?? '',
-    },
-    // timeoutMillis: 10
-});
+// const logExporter = new OTLPLogExporter({
+//     url: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+//          ?? OTEL_EXPORTER_OTLP_ENDPOINT
+//          ?? undefined,
+//     headers: {
+//         Authorization: OTLP_AUTH_HEADER
+//                         ?? OTEL_EXPORTER_OTLP_HEADERS
+//                         ?? '',
+//     },
+//     // timeoutMillis: 10
+// });
 
-export const batchLogProcessor = new BatchLogRecordProcessor(logExporter);
+// export const batchLogProcessor = new BatchLogRecordProcessor(logExporter);
 
 const sdk = new NodeSDK({
 	resource,
     spanProcessor: simpleSpanProcessor,
-    logRecordProcessor: batchLogProcessor,
+    // logRecordProcessor: batchLogProcessor,
 	instrumentations: [getNodeAutoInstrumentations(), new ConsoleInstrumentation()]
 });
 
@@ -86,9 +86,9 @@ try{
 }
 
 process.on('SIGTERM', () => {
-  batchSpanProcessor.forceFlush();
-  console.log('Spans Flushed');
-  batchLogProcessor.forceFlush();
-  console.log('Logs Flushed');
+//   batchSpanProcessor.forceFlush();
+//   console.log('Spans Flushed');
+//   batchLogProcessor.forceFlush();
+//   console.log('Logs Flushed');
   process.exit(0);
 });
