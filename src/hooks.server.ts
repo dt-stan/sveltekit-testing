@@ -44,34 +44,6 @@ const tracePropagationInterceptor: Handle = async ({ event, resolve }) => {
 };
 
 /**
- * Extract Dynatrace cookies to correlate server spans with browser sessions.
- */
-const dynatraceCookieExtractor: Handle = async ({ event, resolve }) => {
-	const span = trace.getSpan(context.active());
-
-	if (span) {
-		const dtCookie = event.cookies.get('dtCookie') ?? '';
-		const browserMatch = dtCookie.match(/_sn_([A-Z0-9]+)_/);
-		if (browserMatch?.[1]) {
-			span.setAttribute('browser_session_id', browserMatch[1]);
-		}
-
-		const userID = event.cookies.get('rxVisitor');
-		if (userID) {
-			span.setAttribute('user_id', userID);
-		}
-
-		const dtPC = event.cookies.get('dtPC') ?? '';
-		const sessionMatch = dtPC.match(/h-v([^-]+-\d+)e0/);
-		if (sessionMatch?.[1]) {
-			span.setAttribute('session_id', sessionMatch[1]);
-		}
-	}
-
-	return await resolve(event);
-};
-
-/**
  * Initialize load timing storage for each request.
  * Allows measuring the gap between load() completion and component rendering.
  */
@@ -151,7 +123,6 @@ export const handle = sequence(
 	tracePropagationInterceptor,
 	loadTimingTracker,
 	ssrRenderingTracker,
-	dynatraceCookieExtractor,
 	addSsrRenderSpan,
 	otelErrorTracker
 );
